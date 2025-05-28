@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>English-Hebrew Line Drawing Game</title>
+    
+    <!-- PWA and Mobile Optimization -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Line Game">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Additional Mobile Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Line Game">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- Prevent zoom on iOS -->
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Description for search engines and social media -->
+    <meta name="description" content="Draw lines to match English words with their Hebrew translations! Fun educational game for language learning.">
+    <meta name="keywords" content="English, Hebrew, language learning, educational game, vocabulary">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 English-Hebrew Line Drawing Game</h1>
+            <p>Drag lines to match English words with their Hebrew translations!</p>
+        </header>
+
+        <div class="game-container">
+            <div class="instructions">
+                <p>🖱️ Click and drag from an English word to its Hebrew translation to draw a line!</p>
+                <p>Match all 8 pairs correctly to win! 🎯</p>
+            </div>
+
+            <div class="matching-area">
+                <div class="column english-column">
+                    <h3>English</h3>
+                    <div class="word-list" id="englishWords">
+                        <div class="word-item" data-word="computer">computer</div>
+                        <div class="word-item" data-word="mouse">mouse</div>
+                        <div class="word-item" data-word="keyboard">keyboard</div>
+                        <div class="word-item" data-word="pencil">pencil</div>
+                        <div class="word-item" data-word="pen">pen</div>
+                        <div class="word-item" data-word="eraser">eraser</div>
+                        <div class="word-item" data-word="game">game</div>
+                        <div class="word-item" data-word="paper">paper</div>
+                    </div>
+                </div>
+
+                <div class="connection-area">
+                    <svg id="connectionSvg" class="connection-svg">
+                        <!-- Lines will be drawn here -->
+                    </svg>
+                </div>
+
+                <div class="column hebrew-column">
+                    <h3>עברית</h3>
+                    <div class="word-list" id="hebrewWords">
+                        <div class="word-item" data-word="computer">מחשב</div>
+                        <div class="word-item" data-word="mouse">עכבר</div>
+                        <div class="word-item" data-word="keyboard">מקלדת</div>
+                        <div class="word-item" data-word="pencil">עיפרון</div>
+                        <div class="word-item" data-word="pen">עט</div>
+                        <div class="word-item" data-word="eraser">מחק</div>
+                        <div class="word-item" data-word="game">משחק</div>
+                        <div class="word-item" data-word="paper">נייר</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="checkAnswers" class="btn-primary">Check Answers</button>
+                <button id="resetGame" class="btn-secondary">Reset Game</button>
+                <button id="nextLevel" class="btn-next hidden">Next Level</button>
+            </div>
+
+            <div class="effects-panel">
+                <h4>🎨 Visual Effects</h4>
+                <div class="effect-controls">
+                    <label class="effect-toggle">
+                        <input type="checkbox" id="animationsEnabled" checked>
+                        <span class="slider"></span>
+                        <span class="label">Line Animations</span>
+                    </label>
+                    <label class="effect-toggle">
+                        <input type="checkbox" id="soundEffectsEnabled" checked>
+                        <span class="slider"></span>
+                        <span class="label">Sound Effects</span>
+                    </label>
+                    <label class="effect-toggle">
+                        <input type="checkbox" id="rippleEffectsEnabled" checked>
+                        <span class="slider"></span>
+                        <span class="label">Ripple Effects</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="result" class="result hidden"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- Install prompt for PWA -->
+    <div id="installPrompt" class="install-prompt hidden">
+        <div class="install-content">
+            <h3>📱 Install App</h3>
+            <p>Install this game on your device for the best experience!</p>
+            <div class="install-buttons">
+                <button id="installBtn" class="btn-primary">Install</button>
+                <button id="dismissBtn" class="btn-secondary">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installPrompt = document.getElementById('installPrompt');
+        const installBtn = document.getElementById('installBtn');
+        const dismissBtn = document.getElementById('dismissBtn');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPrompt.classList.remove('hidden');
+        });
+        
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+                installPrompt.classList.add('hidden');
+            }
+        });
+        
+        dismissBtn.addEventListener('click', () => {
+            installPrompt.classList.add('hidden');
+            deferredPrompt = null;
+        });
+        
+        // Hide install prompt if already installed
+        window.addEventListener('appinstalled', () => {
+            installPrompt.classList.add('hidden');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <h1>Generating App Icons...</h1>
+    <canvas id="canvas" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+    <br><br>
+    <a id="download192" download="icon-192.png">Download 192x192 Icon</a><br>
+    <a id="download512" download="icon-512.png">Download 512x512 Icon</a>
+
+    <script>
+        function createIcon(size) {
+            const canvas = document.getElementById('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw connecting lines
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.02;
+            ctx.lineCap = 'round';
+            
+            // Multiple curved lines
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                const y = size * (0.3 + i * 0.2);
+                ctx.moveTo(size * 0.1, y);
+                ctx.quadraticCurveTo(size * 0.5, y - size * 0.1, size * 0.9, y);
+                ctx.stroke();
+            }
+            
+            // Draw word boxes
+            ctx.fillStyle = 'white';
+            ctx.fillRect(size * 0.05, size * 0.2, size * 0.25, size * 0.15);
+            ctx.fillRect(size * 0.05, size * 0.4, size * 0.25, size * 0.15);
+            ctx.fillRect(size * 0.05, size * 0.6, size * 0.25, size * 0.15);
+            
+            ctx.fillRect(size * 0.7, size * 0.2, size * 0.25, size * 0.15);
+            ctx.fillRect(size * 0.7, size * 0.4, size * 0.25, size * 0.15);
+            ctx.fillRect(size * 0.7, size * 0.6, size * 0.25, size * 0.15);
+            
+            // Text simulation
+            ctx.fillStyle = '#333';
+            ctx.font = `${size * 0.03}px Arial`;
+            ctx.textAlign = 'center';
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        // Create and download 192x192 icon
+        document.getElementById('download192').href = createIcon(192);
+        
+        // Create and download 512x512 icon  
+        document.getElementById('download512').href = createIcon(512);
+        
+        console.log('Icons generated! Right-click the links to download.');
+    </script>
+</body>
+</html> 
