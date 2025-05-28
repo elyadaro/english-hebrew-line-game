@@ -110,18 +110,6 @@
 
     <script src="script.js"></script>
     
-    <!-- Install prompt for PWA -->
-    <div id="installPrompt" class="install-prompt hidden">
-        <div class="install-content">
-            <h3>📱 Install App</h3>
-            <p>Install this game on your device for the best experience!</p>
-            <div class="install-buttons">
-                <button id="installBtn" class="btn-primary">Install</button>
-                <button id="dismissBtn" class="btn-secondary">Maybe Later</button>
-            </div>
-        </div>
-    </div>
-    
     <!-- Service Worker Registration -->
     <script>
         // Register service worker
@@ -136,39 +124,6 @@
                     });
             });
         }
-        
-        // PWA Install Prompt
-        let deferredPrompt;
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
-        const dismissBtn = document.getElementById('dismissBtn');
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installPrompt.classList.remove('hidden');
-        });
-        
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null;
-                installPrompt.classList.add('hidden');
-            }
-        });
-        
-        dismissBtn.addEventListener('click', () => {
-            installPrompt.classList.add('hidden');
-            deferredPrompt = null;
-        });
-        
-        // Hide install prompt if already installed
-        window.addEventListener('appinstalled', () => {
-            installPrompt.classList.add('hidden');
-            deferredPrompt = null;
-        });
     </script>
 </body>
 </html> 

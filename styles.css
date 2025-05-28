@@ -550,12 +550,6 @@ header p {
         gap: 10px;
         align-items: center;
     }
-
-    .install-prompt {
-        bottom: 10px;
-        width: 95%;
-        max-width: none;
-    }
 }
 
 @media (max-width: 480px) {
@@ -715,68 +709,6 @@ header p {
 /* Enhanced word hover states for dragging */
 .word-item:active {
     cursor: grabbing;
-}
-
-/* PWA Install Prompt */
-.install-prompt {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    max-width: 350px;
-    width: 90%;
-    padding: 0;
-    overflow: hidden;
-    animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateX(-50%) translateY(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-}
-
-.install-content {
-    padding: 20px;
-    text-align: center;
-}
-
-.install-content h3 {
-    margin-bottom: 10px;
-    color: #333;
-    font-size: 1.3rem;
-}
-
-.install-content p {
-    margin-bottom: 20px;
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.4;
-}
-
-.install-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.install-buttons button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
 }
 
 /* Enhanced touch interactions */
